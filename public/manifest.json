@@ -1,0 +1,9 @@
+{
+  "name": "Deutsch Lernen · A1→B1",
+  "short_name": "DeutschLernen",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "orientation": "portrait"
+}
