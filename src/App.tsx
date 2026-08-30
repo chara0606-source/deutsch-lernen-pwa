@@ -375,6 +375,76 @@ function DrillPage({ data }: { data: DrillData }) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Debate */}
+      <Card className="border-l-4 border-l-pink-500 bg-slate-900 border-slate-700">
+        <CardHeader className="pb-2"><CardTitle className="text-sm text-amber-400">⚔️ Mini-Debatte · 辩论</CardTitle></CardHeader>
+        <CardContent className="space-y-2">
+          <p className="text-sm font-medium">{data.debate.question}</p>
+          <p className="text-xs text-slate-400">{data.debate.translation}</p>
+          <div className="space-y-1">
+            {data.debate.points.map((p, i) => (
+              <div key={i} className="bg-slate-950 rounded-md p-2 text-xs border-l-2 border-l-amber-500">
+                <span className="text-amber-400 font-bold">{p.side}</span> {p.text}
+              </div>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <Button size="sm" className="bg-pink-600 hover:bg-pink-500" onClick={() => { debateTimer.start(); markProgress(5) }} disabled={debateTimer.running}>
+              {debateTimer.running ? `⏱️ ${debateTimer.display}` : '⏱️ 90秒计时'}
+            </Button>
+            {debateTimer.running && <span className="font-mono text-amber-400 text-lg">{debateTimer.display}</span>}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Check-in */}
+      {drillProgress >= 80 && (
+        <Card className="bg-slate-900 border-slate-700 border-l-4 border-l-green-500">
+          <CardContent className="p-4 text-center space-y-2">
+            <div className="text-2xl">🎉</div>
+            <p className="text-sm font-bold text-green-400">Training fast geschafft!</p>
+            <Button
+              size="sm"
+              className="bg-green-600 hover:bg-green-500"
+              onClick={() => {
+                const today = new Date()
+                const dateStr = today.toISOString().split('T')[0]
+                const dayNum = today.getDate()
+                const raw = localStorage.getItem('deutsch-progress')
+                const prog = raw ? JSON.parse(raw) : { streak: 0, bestStreak: 0, totalMinutes: 0, totalVocab: 0, masteredVocab: 0, doneDays: [], lastPracticeDate: null }
+                
+                prog.totalMinutes += 30
+                prog.totalVocab += data.vocab.length
+                prog.masteredVocab += Math.floor(data.vocab.length * 0.6)
+                
+                if (prog.lastPracticeDate) {
+                  const last = new Date(prog.lastPracticeDate)
+                  const diff = Math.floor((today.getTime() - last.getTime()) / (1000 * 60 * 60 * 24))
+                  if (diff === 1) {
+                    prog.streak += 1
+                  } else if (diff > 1) {
+                    prog.streak = 1
+                  }
+                } else {
+                  prog.streak = 1
+                }
+                if (prog.streak > prog.bestStreak) prog.bestStreak = prog.streak
+                prog.lastPracticeDate = dateStr
+                
+                if (!prog.doneDays.includes(dayNum)) {
+                  prog.doneDays.push(dayNum)
+                }
+                
+                localStorage.setItem('deutsch-progress', JSON.stringify(prog))
+                alert('✅ 打卡成功！Fortschritt gespeichert.')
+              }}
+            >
+              ✅ 完成今日训练并打卡
+            </Button>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }
@@ -467,54 +537,301 @@ function PhoneticPage() {
 // ─── Materials Page ──────────────────────────────────────────────────
 function MaterialsPage() {
   const [text, setText] = useState('')
-  const [parsed, setParsed] = useState<{vocab:string[],dialogues:string[]}|null>(null)
+  const [parsed, setParsed] = useState<{
+    title: string
+    lessonNum: string
+    phrases: {german: string; chinese: string; context: string}[]
+    dialogues: {speaker: string; chinese: string; german: string}[]
+    substitutions: {original: string; replacement: string; meaning: string}[]
+    extendedPrompt: {german: string; chinese: string}
+  } | null>(null)
   const [parsing, setParsing] = useState(false)
+  const [savedMaterials, setSavedMaterials] = useState<any[]>([])
+
+  useEffect(() => {
+    const raw = localStorage.getItem('deutsch-materials')
+    if (raw) setSavedMaterials(JSON.parse(raw))
+  }, [])
+
+  const saveMaterial = (material: any) => {
+    const updated = [material, ...savedMaterials].slice(0, 20)
+    localStorage.setItem('deutsch-materials', JSON.stringify(updated))
+    setSavedMaterials(updated)
+  }
+
+
+  const extractPhrases = (german: string, chinese: string): {german: string; chinese: string; context: string}[] => {
+    const phrases: {german: string; chinese: string; context: string}[] = []
+    const collocations = [
+      {de: /\b(Verspätung\s+haben)\b/gi, zh: '晚点'},
+      {de: /\b(zu\s+spät\s+kommen)\b/gi, zh: '迟到'},
+      {de: /\b(die\s+Besprechung\s+verpassen)\b/gi, zh: '错过会议'},
+      {de: /\b(es\s+war\s+mir\s+(ein\s+bisschen\s+)?unangenehm)\b/gi, zh: '我觉得不好意思'},
+      {de: /\b(sich\s+etwas\s+holen)\b/gi, zh: '买/办某物'},
+      {de: /\b(sich\s+etwas\s+kaufen)\b/gi, zh: '购买某物'},
+      {de: /\b(darüber\s+nachdenken)\b/gi, zh: '考虑'},
+      {de: /\b(auf\s+\d+\s+Uhr\s+verschieben)\b/gi, zh: '改到几点'},
+      {de: /\b(es\s+rechtzeitig\s+schaffen)\b/gi, zh: '及时赶到'},
+      {de: /\b(Hoffentlich\s+.+?nicht\s+wieder)\b/gi, zh: '希望不要再...'},
+      {de: /\b(ein\s+Problem\s+geben)\b/gi, zh: '出问题'},
+      {de: /\b(sauer\s+sein)\b/gi, zh: '生气'},
+      {de: /\b(trotzdem\s+\w+)\b/gi, zh: '尽管如此还是...'},
+      {de: /\b(extra\s+früh)\b/gi, zh: '特意很早'},
+      {de: /\b(noch\s+früher)\b/gi, zh: '更早'},
+      {de: /\b(zu\s+weit\s+weg)\b/gi, zh: '太远'},
+      {de: /\b(Monatskarte\s+kaufen)\b/gi, zh: '买月票'},
+      {de: /\b(mit\s+Bus\s+und\s+U-Bahn\s+fahren)\b/gi, zh: '坐公交和地铁'},
+      {de: /\b(ich\s+habe\s+gehört,\s+dass)\b/gi, zh: '我听说...'},
+      {de: /\b(es\s+gab\s+sicherlich)\b/gi, zh: '肯定出了...'},
+      {de: /\b(Das\s+ist\s+ja\s+praktisch)\b/gi, zh: '这真方便'},
+      {de: /\b(ich\s+habe\s+mir\s+.+?\s+gekauft)\b/gi, zh: '我买了...'},
+      {de: /\b(Damit\s+kann\s+ich\s+.+?\s+fahren)\b/gi, zh: '用这个我可以坐...'},
+      {de: /\b(Mit\s+dem\s+Fahrrad\s+schaffe\s+ich\s+das\s+nicht)\b/gi, zh: '骑车我做不到'},
+      {de: /\b(Bei\s+sowas\s+ist\s+man\s+dann\s+schneller)\b/gi, zh: '这样的话更快'},
+      {de: /\b(Wenn\s+es\s+morgen\s+wieder\s+so\s+ist)\b/gi, zh: '如果明天还是这样'},
+      {de: /\b(nur\s+sehr\s+langsam\s+weitergehen)\b/gi, zh: '只能慢慢前进'},
+      {de: /\b(einen\s+kleinen\s+Unfall\s+gab)\b/gi, zh: '发生了小事故'},
+      {de: /\b(ewig\s+nicht\s+losfahren)\b/gi, zh: '很久不开动'},
+      {de: /\b(fast\s+zu\s+spät\s+gekommen)\b/gi, zh: '差点迟到'},
+      {de: /\b(losfahren|abfahren|ankommen|aufstehen|einsteigen|aussteigen)\b/gi, zh: '(车)开动/出发/到达/起床/上车/下车'},
+      {de: /\b(weitergehen|vorbeikommen|zurückkommen|mitkommen)\b/gi, zh: '继续走/路过/回来/一起来'},
+    ]
+    for (const col of collocations) {
+      let m: RegExpExecArray | null
+      while ((m = col.de.exec(german)) !== null) {
+        if (!phrases.some(p => p.german === m![0])) {
+          phrases.push({ german: m![0], chinese: col.zh, context: chinese })
+        }
+      }
+    }
+    return phrases.slice(0, 18)
+  }
+
+  const generateSubstitutions = (dialogues: {speaker: string; chinese: string; german: string}[]) => {
+    const subs: {original: string; replacement: string; meaning: string}[] = []
+    const allGerman = dialogues.map(d => d.german).join(' ')
+    const patterns = [
+      { from: /U-Bahn/gi, to: 'Bus', meaning: '地铁 → 公交' },
+      { from: /Bus/gi, to: 'Zug', meaning: '公交 → 火车' },
+      { from: /Chef/gi, to: 'Kollege', meaning: '老板 → 同事' },
+      { from: /Besprechung/gi, to: 'Termin', meaning: '会议 → 约会' },
+      { from: /Fahrrad/gi, to: 'Auto', meaning: '自行车 → 汽车' },
+      { from: /Monatskarte/gi, to: 'Tageskarte', meaning: '月票 → 日票' },
+      { from: /früh/gi, to: 'spät', meaning: '早 → 晚' },
+      { from: /schnell/gi, to: 'langsam', meaning: '快 → 慢' },
+      { from: /Innenstadt/gi, to: 'Stadtzentrum', meaning: '市中心 → 市中心(同义)' },
+      { from: /Unfall/gi, to: 'Problem', meaning: '事故 → 问题' },
+      { from: /morgen/gi, to: 'heute', meaning: '明天 → 今天' },
+    ]
+    for (const p of patterns) {
+      if (p.from.test(allGerman)) {
+        subs.push({ original: p.from.source, replacement: p.to, meaning: p.meaning })
+      }
+    }
+    return subs.slice(0, 6)
+  }
+
+  const generateExtendedPrompt = () => {
+    const topics = [
+      { german: 'Erzähl von einem Mal, wo du zu spät zur Arbeit gekommen bist. Was ist passiert?', chinese: '讲一次你上班迟到的经历。发生了什么事？' },
+      { german: 'Welches Verkehrsmittel benutzt du jeden Tag? Warum?', chinese: '你每天用什么交通工具？为什么？' },
+      { german: 'Hast du schon mal eine wichtige Besprechung verpasst? Was hast du gemacht?', chinese: '你有没有错过重要会议？你怎么处理的？' },
+      { german: 'Was machst du, wenn der Bus nicht kommt?', chinese: '如果公交不来，你怎么办？' },
+      { german: 'Hast du schon mal darüber nachgedacht, das Fahrrad zu nehmen? Warum oder warum nicht?', chinese: '你有没有想过骑车？为什么？' },
+      { german: 'Was findest du besser: Monatskarte oder Einzeltickets? Begründe deine Antwort.', chinese: '你觉得月票好还是单程票好？说明理由。' },
+    ]
+    return topics[Math.floor(Math.random() * topics.length)]
+  }
 
   const handleParse = () => {
     if (!text.trim() || text.trim().length < 20) return
     setParsing(true)
     setTimeout(() => {
-      const words = text.match(/\b[a-zäöüß]{4,15}\b/gi) || []
-      const unique = [...new Set(words.map(w => w.toLowerCase()))].slice(0, 10)
-      const lines = text.split('\n').filter(l => l.trim().length > 10)
-      setParsed({ vocab: unique, dialogues: lines.slice(0, 5) })
+      const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0)
+      let title = '口语课内容'
+      let lessonNum = ''
+      const titleLine = lines.find(l => l.includes('蜜蜂德语'))
+      if (titleLine) title = titleLine
+      const lessonLine = lines.find(l => /第.+?节课|第.+?次课/.test(l))
+      if (lessonLine) lessonNum = lessonLine
+      
+      const dialogues: {speaker: string; chinese: string; german: string}[] = []
+      let currentSpeaker = 'A'
+      
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i]
+        if (line.includes('蜜蜂德语') || /第.+?节课|第.+?次课/.test(line)) continue
+        
+        const speakerMatch = line.match(/^([AB])[:：]\s*(.+)/)
+        if (speakerMatch) {
+          currentSpeaker = speakerMatch[1]
+          const content = speakerMatch[2].trim()
+          const hasChinese = /[\u4e00-\u9fff]/.test(content)
+          const hasGerman = /[a-zäöüß]/i.test(content)
+          
+          if (hasChinese && !hasGerman) {
+            let germanLine = ''
+            for (let j = i + 1; j < lines.length && j < i + 3; j++) {
+              const nextLine = lines[j]
+              if (/^[AB][:：]/.test(nextLine)) break
+              if (/[a-zäöüß]/i.test(nextLine) && !/[\u4e00-\u9fff]/.test(nextLine)) {
+                germanLine = nextLine.trim()
+                break
+              }
+            }
+            if (germanLine) {
+              dialogues.push({ speaker: currentSpeaker, chinese: content, german: germanLine })
+            }
+          } else if (hasGerman && !hasChinese) {
+            let chineseLine = ''
+            for (let j = i - 1; j >= 0 && j >= i - 2; j--) {
+              const prevLine = lines[j]
+              if (/^[AB][:：]/.test(prevLine)) {
+                const prevContent = prevLine.replace(/^[AB][:：]\s*/, '').trim()
+                if (/[\u4e00-\u9fff]/.test(prevContent) && !/[a-zäöüß]/i.test(prevContent)) {
+                  chineseLine = prevContent
+                  break
+                }
+              }
+            }
+            if (chineseLine) {
+              dialogues.push({ speaker: currentSpeaker, chinese: chineseLine, german: content })
+            }
+          }
+        }
+      }
+      
+      const uniqueDialogues = dialogues.filter((d, i, arr) => 
+        arr.findIndex(t => t.german === d.german) === i
+      )
+      
+      const allPhrases: {german: string; chinese: string; context: string}[] = []
+      for (const d of uniqueDialogues) {
+        const phrases = extractPhrases(d.german, d.chinese)
+        allPhrases.push(...phrases)
+      }
+      
+      const uniquePhrases = allPhrases.filter((p, i, arr) => 
+        arr.findIndex(t => t.german === p.german) === i
+      ).slice(0, 20)
+      
+      const substitutions = generateSubstitutions(uniqueDialogues)
+      const extendedPrompt = generateExtendedPrompt()
+      
+      const result = {
+        title,
+        lessonNum,
+        phrases: uniquePhrases,
+        dialogues: uniqueDialogues,
+        substitutions,
+        extendedPrompt
+      }
+      
+      setParsed(result)
+      saveMaterial({ ...result, date: new Date().toISOString() })
       setParsing(false)
-    }, 1200)
+    }, 800)
   }
 
   return (
     <div className="space-y-3 pb-24">
       <h1 className="text-lg font-bold text-amber-400">📚 Meine Lehrmaterialien</h1>
-      <Textarea
-        placeholder="把你的德语口语课内容粘贴到这里...&#10;支持：对话、词汇表、任意德语材料"
-        value={text}
-        onChange={e => setText(e.target.value)}
-        className="bg-slate-900 border-slate-700 text-slate-100 min-h-[120px] text-sm"
-      />
-      <Button className="w-full bg-amber-500 text-slate-950 hover:bg-amber-400 font-bold" onClick={handleParse} disabled={parsing}>
-        {parsing ? '⏳ 解析中...' : '🔍 解析并混入每日练习'}
-      </Button>
+      
+      <Card className="bg-slate-900 border-slate-700 border-l-4 border-l-amber-500">
+        <CardContent className="p-3 space-y-2">
+          <p className="text-xs text-slate-400">粘贴口语课内容（支持中文+德语对照格式，如 A：... / 德语）</p>
+          <Textarea
+            placeholder="例如：&#10;A：今天早上地铁停了很久，我差点迟到。&#10;Heute Morgen ist die U-Bahn ewig nicht losgefahren..."
+            value={text}
+            onChange={e => setText(e.target.value)}
+            className="bg-slate-950 border-slate-700 text-slate-100 min-h-[180px] text-sm"
+          />
+          <Button className="w-full bg-amber-500 text-slate-950 hover:bg-amber-400 font-bold" onClick={handleParse} disabled={parsing}>
+            {parsing ? '⏳ 智能解析中...' : '🔍 解析并生成扩展练习'}
+          </Button>
+        </CardContent>
+      </Card>
+
+      {savedMaterials.length > 0 && (
+        <div className="text-xs text-slate-500">已保存 {savedMaterials.length} 节课的内容</div>
+      )}
 
       {parsed && (
         <>
           <Card className="bg-slate-900 border-slate-700">
-            <CardHeader className="pb-2"><CardTitle className="text-sm text-amber-400">📝 提取的词汇 ({parsed.vocab.length})</CardTitle></CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-1.5">
-                {parsed.vocab.map((w,i) => (
-                  <span key={i} className="text-xs bg-slate-950 border border-slate-700 rounded-full px-2.5 py-1 text-slate-300">
-                    {w} <button className="text-amber-400 ml-0.5" onClick={() => speakGerman(w)}>🔊</button>
-                  </span>
-                ))}
-              </div>
+            <CardContent className="p-3">
+              <div className="text-sm font-bold text-amber-400">{parsed.title}</div>
+              {parsed.lessonNum && <div className="text-xs text-slate-500">{parsed.lessonNum}</div>}
+              <div className="text-xs text-slate-400 mt-1">{parsed.dialogues.length} 组对话 · {parsed.phrases.length} 个口语词组 · {parsed.substitutions.length} 个替换练习</div>
             </CardContent>
           </Card>
-          <Card className="bg-slate-900 border-slate-700">
-            <CardHeader className="pb-2"><CardTitle className="text-sm text-amber-400">💬 提取的对话 ({parsed.dialogues.length})</CardTitle></CardHeader>
-            <CardContent className="space-y-1.5">
-              {parsed.dialogues.map((d,i) => (
-                <div key={i} className="bg-slate-950 rounded-md p-2.5 text-xs border-l-2 border-l-amber-500 text-slate-300">{d}</div>
+
+          <Card className="bg-slate-900 border-slate-700 border-l-4 border-l-green-500">
+            <CardHeader className="pb-2"><CardTitle className="text-sm text-amber-400">💥 口语词组 · {parsed.phrases.length} 个核心表达</CardTitle></CardHeader>
+            <CardContent className="space-y-2">
+              {parsed.phrases.map((p, i) => (
+                <div key={i} className="bg-slate-950 rounded-lg p-3 border border-slate-800">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1">
+                      <span className="text-amber-400 font-semibold text-sm">{p.german}</span>
+                      <p className="text-xs text-slate-400 mt-0.5">{p.chinese}</p>
+                      <p className="text-[10px] text-slate-600 mt-0.5">💬 {p.context}</p>
+                    </div>
+                    <button className="text-amber-400 text-xs bg-amber-500/10 rounded-full w-7 h-7 flex items-center justify-center shrink-0" onClick={() => speakGerman(p.german)}>🔊</button>
+                  </div>
+                </div>
               ))}
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900 border-slate-700">
+            <CardHeader className="pb-2"><CardTitle className="text-sm text-amber-400">💬 对话原文 · {parsed.dialogues.length} 组</CardTitle></CardHeader>
+            <CardContent className="space-y-2">
+              {parsed.dialogues.map((d, i) => (
+                <div key={i} className={`bg-slate-950 rounded-lg p-3 border ${d.speaker === 'A' ? 'border-l-2 border-l-blue-500' : 'border-l-2 border-l-pink-500'}`}>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${d.speaker === 'A' ? 'bg-blue-500/20 text-blue-400' : 'bg-pink-500/20 text-pink-400'}`}>{d.speaker}</span>
+                    <span className="text-[10px] text-slate-500">{d.chinese}</span>
+                  </div>
+                  <p className="text-sm text-slate-200">{d.german}</p>
+                  <button className="text-amber-400 text-xs mt-1 bg-amber-500/10 rounded-full w-7 h-7 flex items-center justify-center" onClick={() => speakGerman(d.german)}>🔊</button>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900 border-slate-700 border-l-4 border-l-purple-500">
+            <CardHeader className="pb-2"><CardTitle className="text-sm text-amber-400">🔄 替换练习 · 词汇替换</CardTitle></CardHeader>
+            <CardContent className="space-y-2">
+              <p className="text-xs text-slate-400">把对话中的词替换成新词，重新说一遍</p>
+              {parsed.substitutions.map((s, i) => (
+                <div key={i} className="bg-slate-950 rounded-lg p-2.5 border border-slate-800 flex items-center gap-2">
+                  <span className="text-slate-400 text-xs line-through">{s.original}</span>
+                  <span className="text-purple-400 text-xs">→</span>
+                  <span className="text-amber-400 text-xs font-semibold">{s.replacement}</span>
+                  <span className="text-[10px] text-slate-600 ml-auto">{s.meaning}</span>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900 border-slate-700 border-l-4 border-l-blue-500">
+            <CardHeader className="pb-2"><CardTitle className="text-sm text-amber-400">🎤 延伸口语题 · 基于本课主题</CardTitle></CardHeader>
+            <CardContent className="space-y-2">
+              <p className="text-sm font-medium text-slate-200">{parsed.extendedPrompt.german}</p>
+              <p className="text-xs text-slate-400">{parsed.extendedPrompt.chinese}</p>
+              <Button size="sm" className="bg-blue-600 hover:bg-blue-500" onClick={() => speakGerman(parsed.extendedPrompt.german)}>🔊 朗读题目</Button>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900 border-slate-700 border-l-4 border-l-amber-500">
+            <CardHeader className="pb-2"><CardTitle className="text-sm text-amber-400">💡 训练建议</CardTitle></CardHeader>
+            <CardContent className="space-y-1 text-xs text-slate-400">
+              <p>1. <b className="text-slate-300">先听对话</b>：点击🔊听每个对话片段的朗读</p>
+              <p>2. <b className="text-slate-300">词组跟读</b>：逐个跟读口语词组，注意语调和重音</p>
+              <p>3. <b className="text-slate-300">替换练习</b>：用新词替换原词，自己造新句子</p>
+              <p>4. <b className="text-slate-300">延伸话题</b>：用本课学到的表达回答延伸口语题</p>
+              <p>5. <b className="text-slate-300">录音对比</b>：录下自己的回答，和原对话对比发音</p>
             </CardContent>
           </Card>
         </>
@@ -523,39 +840,89 @@ function MaterialsPage() {
   )
 }
 
-// ─── Progress Page ───────────────────────────────────────────────────
 function ProgressPage() {
-  const streak = 12
-  const days = Array.from({length:31},(_,i)=>i+1)
-  const doneDays = [1,2,3,4,5,7,8,9,10,11,12,14,15,16,17,18,19,21,22,23,24,25,26,28,29,30]
-  const missedDays = [6,13,20,27]
+  const [progressData, setProgressData] = useState({
+    streak: 0,
+    bestStreak: 0,
+    totalMinutes: 0,
+    totalVocab: 0,
+    masteredVocab: 0,
+    doneDays: [] as number[],
+    lastPracticeDate: null as string | null,
+  })
+
+  useEffect(() => {
+    const raw = localStorage.getItem('deutsch-progress')
+    if (raw) {
+      try {
+        setProgressData(JSON.parse(raw))
+      } catch {}
+    }
+  }, [])
+
+  const today = new Date().getDate()
+  const monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
+  const currentMonth = monthNames[new Date().getMonth()]
+  const currentYear = new Date().getFullYear()
+
+  const daysInMonth = new Date(currentYear, new Date().getMonth() + 1, 0).getDate()
+  const days = Array.from({ length: daysInMonth }, (_, i) => i + 1)
+
+  const firstDayOfWeek = new Date(currentYear, new Date().getMonth(), 1).getDay()
+  const startOffset = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1
+
+  const weekDays = ['M', 'D', 'M', 'D', 'F', 'S', 'S']
+
+  const completionRate = progressData.totalVocab > 0
+    ? Math.round((progressData.masteredVocab / progressData.totalVocab) * 100)
+    : 0
 
   return (
     <div className="space-y-3 pb-24">
       <h1 className="text-lg font-bold text-amber-400">📊 Fortschritts-Tracker · 进度追踪</h1>
+
       <Card className="bg-slate-900 border-slate-700 text-center p-4 border border-amber-500/20">
         <div className="text-3xl">🔥</div>
-        <div className="text-4xl font-extrabold text-amber-400">{streak}</div>
+        <div className="text-4xl font-extrabold text-amber-400">{progressData.streak}</div>
         <div className="text-xs text-slate-400">Tage in Folge · 连续打卡</div>
-        <div className="text-[10px] text-slate-500 mt-1">Beste: 21 · Ziel: 30</div>
+        <div className="text-[10px] text-slate-500 mt-1">Beste: {progressData.bestStreak} · Ziel: 30</div>
       </Card>
 
       <div className="grid grid-cols-2 gap-2">
-        {[{n:'5.2h',l:'本月时长'},{n:'142',l:'已学词汇'},{n:'38',l:'已掌握'},{n:'86%',l:'完成率'}].map((s,i) => (
-          <Card key={i} className="bg-slate-900 border-slate-700 text-center p-3">
-            <div className="text-xl font-bold text-amber-400">{s.n}</div>
-            <div className="text-[10px] text-slate-400">{s.l}</div>
-          </Card>
-        ))}
+        <Card className="bg-slate-900 border-slate-700 text-center p-3">
+          <div className="text-xl font-bold text-amber-400">{(progressData.totalMinutes / 60).toFixed(1)}h</div>
+          <div className="text-[10px] text-slate-400">总时长</div>
+        </Card>
+        <Card className="bg-slate-900 border-slate-700 text-center p-3">
+          <div className="text-xl font-bold text-amber-400">{progressData.totalVocab}</div>
+          <div className="text-[10px] text-slate-400">已学词组</div>
+        </Card>
+        <Card className="bg-slate-900 border-slate-700 text-center p-3">
+          <div className="text-xl font-bold text-green-400">{progressData.masteredVocab}</div>
+          <div className="text-[10px] text-slate-400">已掌握</div>
+        </Card>
+        <Card className="bg-slate-900 border-slate-700 text-center p-3">
+          <div className="text-xl font-bold text-blue-400">{completionRate}%</div>
+          <div className="text-[10px] text-slate-400">掌握率</div>
+        </Card>
       </div>
 
       <Card className="bg-slate-900 border-slate-700">
-        <CardHeader className="pb-2"><CardTitle className="text-sm text-slate-400">📅 August 2026 · 打卡日历</CardTitle></CardHeader>
+        <CardHeader className="pb-2"><CardTitle className="text-sm text-slate-400">📅 {currentMonth} {currentYear} · 打卡日历</CardTitle></CardHeader>
         <CardContent>
           <div className="grid grid-cols-7 gap-1">
-            {['M','D','M','D','F','S','S'].map((d,i) => <div key={i} className="text-center text-[10px] text-slate-500 py-1">{d}</div>)}
+            {weekDays.map((d, i) => <div key={i} className="text-center text-[10px] text-slate-500 py-1">{d}</div>)}
+            {Array.from({ length: startOffset }).map((_, i) => (
+              <div key={`empty-${i}`} className="aspect-square" />
+            ))}
             {days.map(d => {
-              const cls = doneDays.includes(d) ? 'bg-green-500/20 text-green-400 border-green-500/40' : missedDays.includes(d) ? 'bg-red-500/20 text-red-400 border-red-500/40' : d===30 ? 'border-amber-500 text-amber-400 font-bold' : 'text-slate-600 border-slate-800'
+              const isDone = progressData.doneDays.includes(d)
+              const isToday = d === today
+              const cls = isDone
+                ? 'bg-green-500/20 text-green-400 border-green-500/40'
+                : isToday
+                  ? 'border-amber-500 text-amber-400 font-bold'
+                  : 'text-slate-600 border-slate-800'
               return <div key={d} className={`aspect-square flex items-center justify-center text-[10px] rounded-md border ${cls}`}>{d}</div>
             })}
           </div>
@@ -566,20 +933,19 @@ function ProgressPage() {
         <CardHeader className="pb-2"><CardTitle className="text-sm text-slate-400">🗺️ CEFR Level-Karte</CardTitle></CardHeader>
         <CardContent>
           <div className="flex items-center gap-1">
-            {[{l:'A1',s:'passed'},{l:'A2',s:'current'},{l:'B1',s:'future'},{l:'B2',s:'future'}].map((n,i,arr) => (
+            {[{ l: 'A1', s: 'passed' }, { l: 'A2', s: 'current' }, { l: 'B1', s: 'future' }, { l: 'B2', s: 'future' }].map((n, i, arr) => (
               <div key={i} className="flex items-center flex-1">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 ${n.s==='passed'?'bg-green-500/20 text-green-400 border-green-500':n.s==='current'?'bg-amber-500/20 text-amber-400 border-amber-500 animate-pulse':'bg-slate-800 text-slate-600 border-slate-700'}`}>{n.l}</div>
-                {i < arr.length-1 && <div className={`flex-1 h-0.5 mx-1 ${n.s==='passed'?'bg-green-500':'bg-slate-700'}`} />}
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 ${n.s === 'passed' ? 'bg-green-500/20 text-green-400 border-green-500' : n.s === 'current' ? 'bg-amber-500/20 text-amber-400 border-amber-500 animate-pulse' : 'bg-slate-800 text-slate-600 border-slate-700'}`}>{n.l}</div>
+                {i < arr.length - 1 && <div className={`flex-1 h-0.5 mx-1 ${n.s === 'passed' ? 'bg-green-500' : 'bg-slate-700'}`} />}
               </div>
             ))}
           </div>
-          <p className="text-[10px] text-slate-500 mt-2">当前: A2-早期 · 目标: 6个月达到B1口语流利</p>
+          <p className="text-[10px] text-slate-500 mt-2">当前: A1-早期 · 目标: 6个月达到B1口语流利</p>
         </CardContent>
       </Card>
     </div>
   )
 }
-
 // ─── Audio Library Page ──────────────────────────────────────────────
 function AudioLibraryPage() {
   const [filterLevel, setFilterLevel] = useState<string>('all')
