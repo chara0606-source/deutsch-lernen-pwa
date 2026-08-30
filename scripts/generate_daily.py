@@ -157,7 +157,7 @@ def git_push():
     subprocess.run(['git', 'commit', '-m', f'Update daily drill for {date_str}'], check=True, capture_output=True)
     
     # Push
-    result = subprocess.run(['git', 'push', 'origin', 'main'], capture_output=True, text=True)
+    result = subprocess.run(['git', 'push', 'origin', 'main'], capture_output=True, text=True, encoding='utf-8')
     if result.returncode == 0:
         print(f"Pushed to GitHub: {date_str}")
     else:
@@ -197,6 +197,7 @@ def deploy_ghpages():
     subprocess.run(['git', 'commit', '-m', f'Auto-deploy {datetime.now().strftime("%Y-%m-%d")}'], cwd=gp_dir, check=True, capture_output=True)
     
     result = subprocess.run(['git', 'push', '-f', 'https://github.com/chara0606-source/deutsch-lernen-pwa.git', 'master:gh-pages'],
+        cwd=gp_dir, capture_output=True, text=True, encoding='utf-8')
         cwd=gp_dir, capture_output=True, text=True)
     if result.returncode == 0:
         print("Deployed to gh-pages!")
