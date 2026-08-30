@@ -1,0 +1,53 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2026-08-31",
+  "todayDrill": {
+    "topic": "Im Supermarkt einkaufen · 超市购物",
+    "warmup": {
+      "german": "Blaukraut bleibt Blaukraut und Brautkleid bleibt Brautkleid.",
+      "chinese": "紫甘蓝还是紫甘蓝，婚纱还是婚纱。（练习/au/音）"
+    },
+    "vocab": [
+      {"word": "der Einkaufswagen", "sentence": "Wo finde ich einen Einkaufswagen?", "translation": "购物车在哪里？"},
+      {"word": "die Kasse", "sentence": "An welcher Kasse kann ich bezahlen?", "translation": "我可以在哪个收银台付款？"},
+      {"word": "das Angebot", "sentence": "Dieses Brot ist heute im Angebot.", "translation": "这个面包今天特价。"},
+      {"word": "frisch", "sentence": "Sind die Tomaten noch frisch?", "translation": "这些西红柿还新鲜吗？"},
+      {"word": "die Packung", "sentence": "Ich nehme eine Packung Milch.", "translation": "我拿一包牛奶。"}
+    ],
+    "prompt": {
+      "german": "Beschreib deinen letzten Einkauf. Was hast du gekauft? Wie viel hast du bezahlt?",
+      "chinese": "描述你上次购物的经历。你买了什么？付了多少钱？（目标：60秒口述）"
+    },
+    "shadow": {
+      "german": "Guten Tag! Kann ich Ihnen helfen? – Ja, ich suche frisches Brot. – Das Brot ist hier in der Ecke. Möchten Sie noch etwas? – Ja, eine Packung Butter und zwei Flaschen Wasser. – Das macht zusammen 8 Euro 50. – Bitte schön. – Danke schön! Tschüss!",
+      "chinese": "您好！我能帮您吗？— 是的，我在找新鲜面包。— 面包在那边的角落里。您还要别的吗？— 是的，一包黄油和两瓶水。— 一共8欧元50分。— 给您。— 谢谢！再见！"
+    },
+    "debate": {
+      "question": "Soll man immer frisch einkaufen oder ist Tiefkühlkost auch okay?",
+      "translation": "应该总是买新鲜的，还是冷冻食品也可以？",
+      "points": [
+        {"side": "Pro", "text": "Frisches Essen ist gesünder und schmeckt besser."},
+        {"side": "Contra", "text": "Frisch einkaufen kostet mehr Zeit und Geld."},
+        {"side": "Pro", "text": "Tiefkühlkost ist praktisch und man wirft weniger weg."},
+        {"side": "Contra", "text": "Tiefkühlkost hat oft weniger Vitamine."}
+      ]
+    }
+  },
+  "userContent": {
+    "uploaded": [],
+    "parsedVocab": [],
+    "parsedDialogues": [],
+    "lastUploadDate": null
+  },
+  "schedule": {
+    "rotation": [
+      {"day": 0, "theme": "supermarkt", "label": "超市购物"},
+      {"day": 1, "theme": "vorstellung", "label": "自我介绍"},
+      {"day": 2, "theme": "arzt", "label": "看医生"},
+      {"day": 3, "theme": "restaurant", "label": "餐厅点餐"},
+      {"day": 4, "theme": "weg", "label": "问路"},
+      {"day": 5, "theme": "freizeit", "label": "爱好与休闲"},
+      {"day": 6, "theme": "wohnen", "label": "住房与租房"}
+    ]
+  }
+}
