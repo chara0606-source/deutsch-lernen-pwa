@@ -27,11 +27,13 @@ type VocabItem = {
   mastery: number
 }
 
-type DialogueItem = { speaker: string; line: string }
-
 type Page = 'drill' | 'vocab' | 'phonetic' | 'materials' | 'progress' | 'audio'
 
+
 // ─── Default Drill (fallback) ─────────────────────────────────────────
+
+
+
 const A1_DRILLS: DrillData[] = [
   // 1. Supermarkt (Material 2: Alltag Einkaufen)
   {
