@@ -1,0 +1,113 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2026-08-31T19:13:31.220355",
+  "todayDrill": {
+    "topic": "Im Restaurant · 餐厅点餐",
+    "warmup": {
+      "german": "Schneiders Schneider schneidet schicke Schuhe.",
+      "chinese": "施奈德的裁缝剪裁时髦的鞋子。（练习/sch/音）"
+    },
+    "vocab": [
+      {
+        "word": "die Speisekarte",
+        "sentence": "Könnten wir bitte die Speisekarte sehen?",
+        "translation": "我们可以看一下菜单吗？"
+      },
+      {
+        "word": "die Reservierung",
+        "sentence": "Ich habe eine Reservierung auf den Namen Li.",
+        "translation": "我有一个预约，姓李。"
+      },
+      {
+        "word": "die Rechnung",
+        "sentence": "Die Rechnung, bitte!",
+        "translation": "请结账！"
+      },
+      {
+        "word": "vegetarisch",
+        "sentence": "Haben Sie auch vegetarische Gerichte?",
+        "translation": "你们也有素食菜品吗？"
+      },
+      {
+        "word": "das Trinkgeld",
+        "sentence": "In Deutschland gibt man etwa 10 Prozent Trinkgeld.",
+        "translation": "在德国一般给约10%的小费。"
+      }
+    ],
+    "prompt": {
+      "german": "Beschreib dein Lieblingsrestaurant. Was bestellst du dort immer? Wie ist das Essen?",
+      "chinese": "描述你最喜欢的餐厅。你在那里总是点什么？食物怎么样？（目标：60秒口述）"
+    },
+    "shadow": {
+      "german": "Guten Abend! Haben Sie reserviert? – Ja, einen Tisch für zwei Personen. – Bitte schön, hier entlang. Hier ist die Speisekarte. – Danke. Ich nehme die Tomatensuppe und das Wiener Schnitzel. – Sehr gerne. Möchten Sie auch etwas trinken? – Ja, ein großes Mineralwasser, bitte. – Alles klar. Das kommt sofort!",
+      "chinese": "晚上好！您有预约吗？— 是的，两人桌。— 请这边走。这是菜单。— 谢谢。我要番茄汤和维也纳炸肉排。— 好的。您想喝点什么？— 是的，一大瓶矿泉水，谢谢。— 好的。马上来！"
+    },
+    "debate": {
+      "question": "Soll man in Restaurants immer Trinkgeld geben?",
+      "translation": "在餐厅应该总是给小费吗？",
+      "points": [
+        {
+          "side": "Pro",
+          "text": "Das Servicepersonal verdient oft wenig und braucht das Trinkgeld."
+        },
+        {
+          "side": "Contra",
+          "text": "Das Essen ist schon teuer genug, da muss man nicht noch extra zahlen."
+        },
+        {
+          "side": "Pro",
+          "text": "Trinkgeld ist eine Anerkennung für guten Service."
+        },
+        {
+          "side": "Contra",
+          "text": "In manchen Ländern ist Trinkgeld unhöflich."
+        }
+      ]
+    }
+  },
+  "userContent": {
+    "uploaded": [],
+    "parsedVocab": [],
+    "parsedDialogues": [],
+    "lastUploadDate": null
+  },
+  "schedule": {
+    "rotation": [
+      {
+        "day": 0,
+        "theme": "supermarkt",
+        "label": "超市购物"
+      },
+      {
+        "day": 1,
+        "theme": "vorstellung",
+        "label": "自我介绍"
+      },
+      {
+        "day": 2,
+        "theme": "arzt",
+        "label": "看医生"
+      },
+      {
+        "day": 3,
+        "theme": "restaurant",
+        "label": "餐厅点餐"
+      },
+      {
+        "day": 4,
+        "theme": "weg",
+        "label": "问路"
+      },
+      {
+        "day": 5,
+        "theme": "freizeit",
+        "label": "爱好与休闲"
+      },
+      {
+        "day": 6,
+        "theme": "wohnen",
+        "label": "住房与租房"
+      }
+    ]
+  }
+}
