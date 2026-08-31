@@ -11,7 +11,7 @@ from datetime import datetime
 REPO_DIR = r'C:\Users\CHARA\Documents\kimi\workspace\deutsch-lernen-pwa'
 JSON_PATH = os.path.join(REPO_DIR, 'public', 'daily-content.json')
 
-# A1 drill templates - 14 days rotation
+# A1 drill templates - rotate sequentially, no repeat within one cycle
 DRILL_TEMPLATES = [
     {
         "topic": "Im Supermarkt einkaufen · 超市购物",
@@ -113,30 +113,31 @@ DRILL_TEMPLATES = [
     }
 ]
 
-def generate_today_drill():
-    """Select drill based on day of month, cycling through templates."""
-    day = datetime.now().day
-    idx = day % len(DRILL_TEMPLATES)
-    return DRILL_TEMPLATES[idx]
+def generate_today_drill(data):
+    """Select next drill sequentially using stored drillIndex. No repeats within one cycle."""
+    last_idx = data.get('drillIndex', -1)
+    idx = (last_idx + 1) % len(DRILL_TEMPLATES)
+    return DRILL_TEMPLATES[idx], idx
 
 def update_daily_content():
     """Update daily-content.json with today's drill."""
-    # Load existing content to preserve user uploads
-    data = {"version": "1.0", "lastUpdated": datetime.now().isoformat()}
+    # Load existing content to preserve user uploads and drillIndex
+    data = {"version": "1.0", "lastUpdated": datetime.now().isoformat(), "drillIndex": -1}
     if os.path.exists(JSON_PATH):
         with open(JSON_PATH, 'r', encoding='utf-8') as f:
             data = json.load(f)
     
     # Generate today's drill
-    today_drill = generate_today_drill()
+    today_drill, idx = generate_today_drill(data)
     data['todayDrill'] = today_drill
+    data['drillIndex'] = idx
     data['lastUpdated'] = datetime.now().isoformat()
     
     # Save
     with open(JSON_PATH, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     
-    print(f"Generated drill for {datetime.now().strftime('%Y-%m-%d')}: {today_drill['topic']}")
+    print(f"Generated drill for {datetime.now().strftime('%Y-%m-%d')}: {today_drill['topic']} (index {idx})")
     return today_drill
 
 def git_push():
@@ -163,55 +164,8 @@ def git_push():
     else:
         print(f"Push failed: {result.stderr}")
 
-def deploy_ghpages():
-    """Build and deploy dist to gh-pages branch."""
-    import shutil
-    
-    # Build
-    npm_cmd = r'C:\Users\CHARA\AppData\Local\Programs\Kimi\resources\resources\runtime\npm.cmd'
-    build_result = subprocess.run([npm_cmd, 'run', 'build'], capture_output=True, text=True)
-    if build_result.returncode != 0:
-        print(f"Build failed: {build_result.stderr}")
-        return
-    
-    # Deploy dist to gh-pages
-    gp_dir = os.path.join(os.path.dirname(REPO_DIR), 'gh-pages-auto')
-    if os.path.exists(gp_dir):
-        shutil.rmtree(gp_dir, ignore_errors=True)
-    os.makedirs(gp_dir, exist_ok=True)
-    
-    subprocess.run(['git', 'init'], cwd=gp_dir, check=True, capture_output=True)
-    subprocess.run(['git', 'config', 'user.email', 'chara0606@gmail.com'], cwd=gp_dir, capture_output=True)
-    subprocess.run(['git', 'config', 'user.name', 'chara0606-source'], cwd=gp_dir, capture_output=True)
-    
-    dist_src = os.path.join(REPO_DIR, 'dist')
-    for item in os.listdir(dist_src):
-        src = os.path.join(dist_src, item)
-        dst = os.path.join(gp_dir, item)
-        if os.path.isdir(src):
-            shutil.copytree(src, dst)
-        else:
-            shutil.copy2(src, dst)
-    
-    subprocess.run(['git', 'add', '.'], cwd=gp_dir, check=True, capture_output=True)
-    subprocess.run(['git', 'commit', '-m', f'Auto-deploy {datetime.now().strftime("%Y-%m-%d")}'], cwd=gp_dir, check=True, capture_output=True)
-    
-    result = subprocess.run(['git', 'push', '-f', 'https://github.com/chara0606-source/deutsch-lernen-pwa.git', 'master:gh-pages'],
-        cwd=gp_dir, capture_output=True, text=True, encoding='utf-8')
-    if result.returncode == 0:
-        print("Deployed to gh-pages!")
-    else:
-        print(f"Deploy failed: {result.stderr}")
-    
-    shutil.rmtree(gp_dir, ignore_errors=True)
-
 if __name__ == '__main__':
     print("=== Deutsch Lernen Daily Generator ===")
     update_daily_content()
     git_push()
     print("Done! GitHub Actions will deploy the update.")
-    print("=== Deutsch Lernen Daily Generator ===")
-    update_daily_content()
-    git_push()
-    deploy_ghpages()
-    print("Done!")
