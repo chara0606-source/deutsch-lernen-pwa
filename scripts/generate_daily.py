@@ -178,7 +178,7 @@ def deploy_ghpages():
     gp_dir = os.path.join(os.path.dirname(REPO_DIR), 'gh-pages-auto')
     if os.path.exists(gp_dir):
         shutil.rmtree(gp_dir, ignore_errors=True)
-    os.makedirs(gp_dir)
+    os.makedirs(gp_dir, exist_ok=True)
     
     subprocess.run(['git', 'init'], cwd=gp_dir, check=True, capture_output=True)
     subprocess.run(['git', 'config', 'user.email', 'chara0606@gmail.com'], cwd=gp_dir, capture_output=True)
@@ -198,7 +198,6 @@ def deploy_ghpages():
     
     result = subprocess.run(['git', 'push', '-f', 'https://github.com/chara0606-source/deutsch-lernen-pwa.git', 'master:gh-pages'],
         cwd=gp_dir, capture_output=True, text=True, encoding='utf-8')
-        cwd=gp_dir, capture_output=True, text=True)
     if result.returncode == 0:
         print("Deployed to gh-pages!")
     else:
@@ -210,7 +209,6 @@ if __name__ == '__main__':
     print("=== Deutsch Lernen Daily Generator ===")
     update_daily_content()
     git_push()
-    # Note: GitHub Actions will auto-build and deploy to Pages on push
     print("Done! GitHub Actions will deploy the update.")
     print("=== Deutsch Lernen Daily Generator ===")
     update_daily_content()
