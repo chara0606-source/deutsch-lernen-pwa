@@ -23,11 +23,14 @@ def main():
     top = (h - size) // 2
     img = img.crop((left, top, left + size, top + size))
     
-    # Resize main image to 430x430 for 512px canvas (slight padding)
-    img_430 = img.resize((430, 430), Image.LANCZOS)
-    
     BG = "#0f172a"      # deep slate blue
     BORDER = "#f59e0b"  # amber
+    
+    def composite_onto_bg(src_img, bg_color, target_size):
+        """Composite src_img onto a solid background so transparent areas fill with bg_color."""
+        bg = Image.new("RGBA", target_size, bg_color)
+        bg.paste(src_img, (0, 0), src_img)
+        return bg
     
     def make_standard(size_px, corner_radius=None):
         """Standard icon: rounded rect bg + centered image + amber border + fire emoji."""
@@ -38,26 +41,31 @@ def main():
         draw = ImageDraw.Draw(canvas)
         
         # Draw rounded rect background
+        border_width = max(1, size_px // 64)
         draw.rounded_rectangle(
             [(0, 0), (size_px - 1, size_px - 1)],
             radius=corner_radius,
             fill=BG,
             outline=BORDER,
-            width=max(1, size_px // 64)
+            width=border_width
         )
         
         # Calculate image placement (centered with slight top bias for fire room)
         img_size = int(size_px * 0.74)
         img_resized = img.resize((img_size, img_size), Image.LANCZOS)
-        img_x = (size_px - img_size) // 2
-        img_y = (size_px - img_size) // 2 - size_px // 32  # slightly up
         
-        # Paste with mask for rounded corners on the image itself
+        # Composite onto solid background to fill transparent areas
+        img_composite = composite_onto_bg(img_resized, BG, (img_size, img_size))
+        
+        # Create rounded mask for the image
         mask = Image.new("L", (img_size, img_size), 0)
         mask_draw = ImageDraw.Draw(mask)
         mask_draw.rounded_rectangle([(0, 0), (img_size - 1, img_size - 1)], radius=corner_radius // 2, fill=255)
         
-        canvas.paste(img_resized, (img_x, img_y), mask=mask)
+        img_x = (size_px - img_size) // 2
+        img_y = (size_px - img_size) // 2 - size_px // 32  # slightly up
+        
+        canvas.paste(img_composite, (img_x, img_y), mask=mask)
         
         # Add fire emoji in bottom right
         fire_size = max(size_px // 8, 14)
@@ -96,9 +104,11 @@ def main():
             width=max(1, size_px // 64)
         )
         
-        # Scale image to fit inside safe zone (80% of diameter)
+        # Scale image to fit inside safe zone (65% of canvas)
         safe = int(size_px * 0.65)
         img_resized = img.resize((safe, safe), Image.LANCZOS)
+        img_composite = composite_onto_bg(img_resized, BG, (safe, safe))
+        
         img_x = (size_px - safe) // 2
         img_y = (size_px - safe) // 2 - size_px // 40
         
@@ -107,7 +117,7 @@ def main():
         mask_draw = ImageDraw.Draw(mask)
         mask_draw.ellipse([(0, 0), (safe - 1, safe - 1)], fill=255)
         
-        canvas.paste(img_resized, (img_x, img_y), mask=mask)
+        canvas.paste(img_composite, (img_x, img_y), mask=mask)
         
         # Fire emoji (bottom right, inside safe zone)
         fire_size = max(size_px // 10, 14)
@@ -151,7 +161,7 @@ def main():
         icon.save(out_path, "PNG")
         print(f"Generated: {out_path} ({size_px}x{size_px})")
     
-    print("\nAll icons generated successfully!")
+    print("\nAll icons regenerated with background fill!")
 
 if __name__ == "__main__":
     main()
