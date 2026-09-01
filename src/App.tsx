@@ -376,27 +376,6 @@ function DrillPage({ data }: { data: DrillData }) {
         </CardContent>
       </Card>
 
-      {/* Debate */}
-      <Card className="border-l-4 border-l-pink-500 bg-slate-900 border-slate-700">
-        <CardHeader className="pb-2"><CardTitle className="text-sm text-amber-400">⚔️ Mini-Debatte · 辩论</CardTitle></CardHeader>
-        <CardContent className="space-y-2">
-          <p className="text-sm font-medium">{data.debate.question}</p>
-          <p className="text-xs text-slate-400">{data.debate.translation}</p>
-          <div className="space-y-1">
-            {data.debate.points.map((p, i) => (
-              <div key={i} className="bg-slate-950 rounded-md p-2 text-xs border-l-2 border-l-amber-500">
-                <span className="text-amber-400 font-bold">{p.side}</span> {p.text}
-              </div>
-            ))}
-          </div>
-          <div className="flex items-center gap-2">
-            <Button size="sm" className="bg-pink-600 hover:bg-pink-500" onClick={() => { debateTimer.start(); markProgress(5) }} disabled={debateTimer.running}>
-              {debateTimer.running ? `⏱️ ${debateTimer.display}` : '⏱️ 90秒计时'}
-            </Button>
-            {debateTimer.running && <span className="font-mono text-amber-400 text-lg">{debateTimer.display}</span>}
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Check-in */}
       {drillProgress >= 80 && (
