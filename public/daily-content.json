@@ -1,67 +1,67 @@
 {
   "version": "1.0",
-  "lastUpdated": "2026-08-31T19:50:00.000000",
-  "drillIndex": 3,
+  "lastUpdated": "2026-09-01T13:32:10.716712",
+  "drillIndex": 4,
   "todayDrill": {
-    "topic": "Im Restaurant · 餐厅点餐",
+    "topic": "Nach dem Weg fragen · 问路",
     "warmup": {
-      "german": "Schneiders Schneider schneidet schicke Schuhe.",
-      "chinese": "施奈德的裁缝剪裁时髦的鞋子。（练习/sch/音）"
+      "german": "Bäcker backt braune Bretzeln.",
+      "chinese": "面包师烤棕色碱水结。（练习/b/和/br/音）"
     },
     "vocab": [
       {
-        "word": "die Speisekarte",
-        "sentence": "Könnten wir bitte die Speisekarte sehen?",
-        "translation": "我们可以看一下菜单吗？"
+        "word": "die Richtung",
+        "sentence": "In welche Richtung muss ich gehen?",
+        "translation": "我应该往哪个方向走？"
       },
       {
-        "word": "die Reservierung",
-        "sentence": "Ich habe eine Reservierung auf den Namen Li.",
-        "translation": "我有一个预约，姓李。"
+        "word": "die Kreuzung",
+        "sentence": "Gehen Sie bis zur nächsten Kreuzung.",
+        "translation": "走到下一个十字路口。"
       },
       {
-        "word": "die Rechnung",
-        "sentence": "Die Rechnung, bitte!",
-        "translation": "请结账！"
+        "word": "geradeaus",
+        "sentence": "Gehen Sie geradeaus und dann links.",
+        "translation": "直走然后左转。"
       },
       {
-        "word": "vegetarisch",
-        "sentence": "Haben Sie auch vegetarische Gerichte?",
-        "translation": "你们也有素食菜品吗？"
+        "word": "die Ampel",
+        "sentence": "An der Ampel sehen Sie die Bank.",
+        "translation": "在红绿灯处您会看到银行。"
       },
       {
-        "word": "das Trinkgeld",
-        "sentence": "In Deutschland gibt man etwa 10 Prozent Trinkgeld.",
-        "translation": "在德国一般给约10%的小费。"
+        "word": "entlang",
+        "sentence": "Gehen Sie den Fluss entlang.",
+        "translation": "沿着河边走。"
       }
     ],
     "prompt": {
-      "german": "Beschreib dein Lieblingsrestaurant. Was bestellst du dort immer? Wie ist das Essen?",
-      "chinese": "描述你最喜欢的餐厅。你在那里总是点什么？食物怎么样？（目标：60秒口述）"
+      "german": "Ein Tourist fragt dich nach dem Weg zum Bahnhof. Erkläre ihm den Weg.",
+      "chinese": "一个游客问你火车站怎么走。给他指路。（目标：60秒口述）"
     },
     "shadow": {
-      "german": "Guten Abend! Haben Sie reserviert? – Ja, einen Tisch für zwei Personen. – Bitte schön, hier entlang. Hier ist die Speisekarte. – Danke. Ich nehme die Tomatensuppe und das Wiener Schnitzel. – Sehr gerne. Möchten Sie auch etwas trinken? – Ja, ein großes Mineralwasser, bitte. – Alles klar. Das kommt sofort!",
-      "chinese": "晚上好！您有预约吗？— 是的，两人桌。— 请这边走。这是菜单。— 谢谢。我要番茄汤和维也纳炸肉排。— 好的。您想喝点什么？— 是的，一大瓶矿泉水，谢谢。— 好的。马上来！"
+      "german": "Entschuldigung, wie komme ich zum Hauptbahnhof? – Gehen Sie hier geradeaus bis zur dritten Kreuzung. Dann biegen Sie rechts ab. Gehen Sie etwa 200 Meter weiter. Die Bahnhofshalle ist auf der linken Seite. Sie können sie nicht verfehlen. – Vielen Dank! – Gern geschehen!",
+      "chinese": "不好意思，请问火车站怎么走？— 从这里直走到第三个十字路口。然后右转。再走大约200米。火车站大厅在左手边。您不会错过的。— 非常感谢！— 不客气！"
     },
     "debate": {
-      "question": "Soll man in Restaurants immer Trinkgeld geben?",
-      "translation": "在餐厅应该总是给小费吗？",
+      "question": "Ist es besser, sich den Weg zu merken oder immer das Navi zu benutzen?",
+      "translation": "记路线好还是总是用导航好？",
       "points": [
         {
-          "side": "Pro",
-          "text": "Das Servicepersonal verdient oft wenig und braucht das Trinkgeld."
+          "side": "Pro (merken)",
+          "text": "Wenn man sich den Weg merkt, lernt man die Stadt besser kennen."
         },
         {
-          "side": "Contra",
-          "text": "Das Essen ist schon teuer genug, da muss man nicht noch extra zahlen."
+          "side": "Contra (merken)",
+          "text": "In einer fremden Stadt ist das Navi sicherer."
         },
         {
-          "side": "Pro",
-          "text": "Trinkgeld ist eine Anerkennung für guten Service."
+          "side": "Pro (Navi)",
+          "text": "Das Navi zeigt immer den schnellsten Weg."
         },
         {
-          "side": "Contra",
-          "text": "In manchen Ländern ist Trinkgeld unhöflich."
+          "side": "Contra (Navi)",
+          "text": "Wer immer auf das Navi schaut, verpasst die Umgebung."
         }
       ]
     }
