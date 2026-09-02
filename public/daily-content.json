@@ -1,67 +1,67 @@
 {
   "version": "1.0",
-  "lastUpdated": "2026-09-01T13:32:10.716712",
-  "drillIndex": 4,
+  "lastUpdated": "2026-09-02T10:36:06.655121",
+  "drillIndex": 5,
   "todayDrill": {
-    "topic": "Nach dem Weg fragen · 问路",
+    "topic": "Freizeit und Hobbys · 爱好与休闲",
     "warmup": {
-      "german": "Bäcker backt braune Bretzeln.",
-      "chinese": "面包师烤棕色碱水结。（练习/b/和/br/音）"
+      "german": "Fischers Fritz fischt frische Fische.",
+      "chinese": "渔夫的弗里茨钓新鲜的鱼。（经典绕口令）"
     },
     "vocab": [
       {
-        "word": "die Richtung",
-        "sentence": "In welche Richtung muss ich gehen?",
-        "translation": "我应该往哪个方向走？"
+        "word": "die Freizeit",
+        "sentence": "In meiner Freizeit lese ich gerne Bücher.",
+        "translation": "我在空闲时间喜欢看书。"
       },
       {
-        "word": "die Kreuzung",
-        "sentence": "Gehen Sie bis zur nächsten Kreuzung.",
-        "translation": "走到下一个十字路口。"
+        "word": "das Hobby",
+        "sentence": "Mein Hobby ist Fotografieren.",
+        "translation": "我的爱好是摄影。"
       },
       {
-        "word": "geradeaus",
-        "sentence": "Gehen Sie geradeaus und dann links.",
-        "translation": "直走然后左转。"
+        "word": "sich treffen",
+        "sentence": "Wir treffen uns am Wochenende.",
+        "translation": "我们周末见面。"
       },
       {
-        "word": "die Ampel",
-        "sentence": "An der Ampel sehen Sie die Bank.",
-        "translation": "在红绿灯处您会看到银行。"
+        "word": "der Film",
+        "sentence": "Möchtest du mit ins Kino kommen?",
+        "translation": "你想一起去看电影吗？"
       },
       {
-        "word": "entlang",
-        "sentence": "Gehen Sie den Fluss entlang.",
-        "translation": "沿着河边走。"
+        "word": "spazieren gehen",
+        "sentence": "Ich gehe jeden Abend spazieren.",
+        "translation": "我每天晚上散步。"
       }
     ],
     "prompt": {
-      "german": "Ein Tourist fragt dich nach dem Weg zum Bahnhof. Erkläre ihm den Weg.",
-      "chinese": "一个游客问你火车站怎么走。给他指路。（目标：60秒口述）"
+      "german": "Was machst du am Wochenende? Erzähl von deinen Plänen.",
+      "chinese": "你周末做什么？讲讲你的计划。（目标：60秒口述）"
     },
     "shadow": {
-      "german": "Entschuldigung, wie komme ich zum Hauptbahnhof? – Gehen Sie hier geradeaus bis zur dritten Kreuzung. Dann biegen Sie rechts ab. Gehen Sie etwa 200 Meter weiter. Die Bahnhofshalle ist auf der linken Seite. Sie können sie nicht verfehlen. – Vielen Dank! – Gern geschehen!",
-      "chinese": "不好意思，请问火车站怎么走？— 从这里直走到第三个十字路口。然后右转。再走大约200米。火车站大厅在左手边。您不会错过的。— 非常感谢！— 不客气！"
+      "german": "Hallo Anna! Was machst du am Samstag? – Ich habe noch keine Pläne. Und du? – Ich gehe ins Kino. Möchtest du mitkommen? – Ja, gerne! Welchen Film schauen wir? – Einen neuen Actionfilm. Er fängt um 20 Uhr an. – Super! Treffen wir uns vorher zum Essen? – Gute Idee! Um 18 Uhr im Italiener?",
+      "chinese": "嗨 Anna！你周六做什么？— 我还没有计划。你呢？— 我要去看电影。你想一起来吗？— 好啊！我们看什么电影？— 一部新的动作片。晚上8点开始。— 太好了！我们要不要先吃饭？— 好主意！6点在意大利餐厅见？"
     },
     "debate": {
-      "question": "Ist es besser, sich den Weg zu merken oder immer das Navi zu benutzen?",
-      "translation": "记路线好还是总是用导航好？",
+      "question": "Ist es besser, am Wochenende zu Hause zu bleiben oder unterwegs zu sein?",
+      "translation": "周末待在家里好还是出门好？",
       "points": [
         {
-          "side": "Pro (merken)",
-          "text": "Wenn man sich den Weg merkt, lernt man die Stadt besser kennen."
+          "side": "Pro (Zuhause)",
+          "text": "Zu Hause kann man richtig entspannen und Energie tanken."
         },
         {
-          "side": "Contra (merken)",
-          "text": "In einer fremden Stadt ist das Navi sicherer."
+          "side": "Contra (Zuhause)",
+          "text": "Wer nur zu Hause sitzt, verpasst viele Erlebnisse."
         },
         {
-          "side": "Pro (Navi)",
-          "text": "Das Navi zeigt immer den schnellsten Weg."
+          "side": "Pro (unterwegs)",
+          "text": "Neue Erfahrungen machen das Leben interessanter."
         },
         {
-          "side": "Contra (Navi)",
-          "text": "Wer immer auf das Navi schaut, verpasst die Umgebung."
+          "side": "Contra (unterwegs)",
+          "text": "Unterwegs sein ist oft teuer und anstrengend."
         }
       ]
     }
