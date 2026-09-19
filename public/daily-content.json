@@ -1,67 +1,67 @@
 {
   "version": "1.0",
-  "lastUpdated": "2026-09-02T10:36:06.655121",
-  "drillIndex": 5,
+  "lastUpdated": "2026-09-19T10:30:16.201056",
+  "drillIndex": 6,
   "todayDrill": {
-    "topic": "Freizeit und Hobbys · 爱好与休闲",
+    "topic": "Wohnen und Miete · 住房与租房",
     "warmup": {
-      "german": "Fischers Fritz fischt frische Fische.",
-      "chinese": "渔夫的弗里茨钓新鲜的鱼。（经典绕口令）"
+      "german": "Der Cottbusser Postkutscher putzt den Cottbusser Postkutschkasten.",
+      "chinese": "科特布斯的邮车夫擦拭科特布斯的邮车箱。（练习/k/和/p/音）"
     },
     "vocab": [
       {
-        "word": "die Freizeit",
-        "sentence": "In meiner Freizeit lese ich gerne Bücher.",
-        "translation": "我在空闲时间喜欢看书。"
+        "word": "die Miete",
+        "sentence": "Die Miete in Berlin ist sehr hoch.",
+        "translation": "柏林的房租很高。"
       },
       {
-        "word": "das Hobby",
-        "sentence": "Mein Hobby ist Fotografieren.",
-        "translation": "我的爱好是摄影。"
+        "word": "die Wohnung",
+        "sentence": "Ich suche eine Wohnung mit zwei Zimmern.",
+        "translation": "我在找一套两居室的公寓。"
       },
       {
-        "word": "sich treffen",
-        "sentence": "Wir treffen uns am Wochenende.",
-        "translation": "我们周末见面。"
+        "word": "der Nachbar",
+        "sentence": "Meine Nachbarn sind sehr nett.",
+        "translation": "我的邻居们很好。"
       },
       {
-        "word": "der Film",
-        "sentence": "Möchtest du mit ins Kino kommen?",
-        "translation": "你想一起去看电影吗？"
+        "word": "möbliert",
+        "sentence": "Ist die Wohnung möbliert oder unmöbliert?",
+        "translation": "这套公寓是带家具的还是不带家具的？"
       },
       {
-        "word": "spazieren gehen",
-        "sentence": "Ich gehe jeden Abend spazieren.",
-        "translation": "我每天晚上散步。"
+        "word": "der Mietvertrag",
+        "sentence": "Bitte lesen Sie den Mietvertrag genau.",
+        "translation": "请仔细阅读租房合同。"
       }
     ],
     "prompt": {
-      "german": "Was machst du am Wochenende? Erzähl von deinen Plänen.",
-      "chinese": "你周末做什么？讲讲你的计划。（目标：60秒口述）"
+      "german": "Beschreib deine Wohnung. Wie viele Zimmer hat sie? Was ist dein Lieblingsplatz?",
+      "chinese": "描述你的公寓。有几个房间？你最喜欢的地方是哪里？（目标：60秒口述）"
     },
     "shadow": {
-      "german": "Hallo Anna! Was machst du am Samstag? – Ich habe noch keine Pläne. Und du? – Ich gehe ins Kino. Möchtest du mitkommen? – Ja, gerne! Welchen Film schauen wir? – Einen neuen Actionfilm. Er fängt um 20 Uhr an. – Super! Treffen wir uns vorher zum Essen? – Gute Idee! Um 18 Uhr im Italiener?",
-      "chinese": "嗨 Anna！你周六做什么？— 我还没有计划。你呢？— 我要去看电影。你想一起来吗？— 好啊！我们看什么电影？— 一部新的动作片。晚上8点开始。— 太好了！我们要不要先吃饭？— 好主意！6点在意大利餐厅见？"
+      "german": "Guten Tag! Ich interessiere mich für die Wohnung. – Ja, sie hat zwei Zimmer, eine Küche und ein Bad. – Ist sie möbliert? – Nein, aber es gibt einen Einbauküche. – Wie hoch ist die Miete? – 850 Euro warm. – Kann ich mir die Wohnung ansehen? – Natürlich! Wann haben Sie Zeit?",
+      "chinese": "您好！我对这套公寓感兴趣。— 是的，它有两个房间、一个厨房和一个浴室。— 带家具吗？— 不，但有一个整体厨房。— 房租多少？— 850欧元全包。— 我可以看房吗？— 当然！您什么时候有时间？"
     },
     "debate": {
-      "question": "Ist es besser, am Wochenende zu Hause zu bleiben oder unterwegs zu sein?",
-      "translation": "周末待在家里好还是出门好？",
+      "question": "Ist es besser, eine Wohnung zu mieten oder zu kaufen?",
+      "translation": "租房好还是买房好？",
       "points": [
         {
-          "side": "Pro (Zuhause)",
-          "text": "Zu Hause kann man richtig entspannen und Energie tanken."
+          "side": "Pro (mieten)",
+          "text": "Mieten gibt mehr Flexibilität, umzuziehen."
         },
         {
-          "side": "Contra (Zuhause)",
-          "text": "Wer nur zu Hause sitzt, verpasst viele Erlebnisse."
+          "side": "Contra (mieten)",
+          "text": "Beim Mieten zahlt man Geld aus, ohne etwas zu besitzen."
         },
         {
-          "side": "Pro (unterwegs)",
-          "text": "Neue Erfahrungen machen das Leben interessanter."
+          "side": "Pro (kaufen)",
+          "text": "Eine eigene Wohnung ist eine gute Investition."
         },
         {
-          "side": "Contra (unterwegs)",
-          "text": "Unterwegs sein ist oft teuer und anstrengend."
+          "side": "Contra (kaufen)",
+          "text": "Kaufen bindet viel Kapital und man kann nicht so leicht umziehen."
         }
       ]
     }
