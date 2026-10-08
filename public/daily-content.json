@@ -1,67 +1,67 @@
 {
   "version": "1.0",
-  "lastUpdated": "2026-09-21T10:30:56.743126",
-  "drillIndex": 1,
+  "lastUpdated": "2026-10-08T10:31:35.527376",
+  "drillIndex": 2,
   "todayDrill": {
-    "topic": "Sich vorstellen · 自我介绍",
+    "topic": "Beim Arzt · 看医生",
     "warmup": {
-      "german": "Wenn hinter Fliegen Fliegen fliegen, fliegen Fliegen Fliegen nach.",
-      "chinese": "如果苍蝇后面有苍蝇在飞，那么苍蝇会跟着苍蝇飞。（练习/f/和/fl/音）"
+      "german": "Zwischen zwei Zwetschgenzweigen sitzen zwei Schwalben.",
+      "chinese": "两只燕子坐在两棵李子树枝之间。（练习/z/和/sch/音）"
     },
     "vocab": [
       {
-        "word": "sich vorstellen",
-        "sentence": "Darf ich mich kurz vorstellen?",
-        "translation": "我可以简短介绍一下自己吗？"
+        "word": "der Termin",
+        "sentence": "Ich habe einen Termin bei Dr. Müller.",
+        "translation": "我和 Müller 医生有约。"
       },
       {
-        "word": "der Wohnort",
-        "sentence": "Mein Wohnort ist München.",
-        "translation": "我的居住地是慕尼黑。"
+        "word": "die Beschwerden",
+        "sentence": "Welche Beschwerden haben Sie?",
+        "translation": "您有什么不适？"
       },
       {
-        "word": "die Herkunft",
-        "sentence": "Meine Herkunft ist China.",
-        "translation": "我来自中国。"
+        "word": "das Fieber",
+        "sentence": "Ich habe seit gestern Fieber.",
+        "translation": "我从昨天开始发烧。"
       },
       {
-        "word": "das Alter",
-        "sentence": "Mein Alter ist 25 Jahre.",
-        "translation": "我25岁。"
+        "word": "die Tablette",
+        "sentence": "Nehmen Sie diese Tabletten dreimal am Tag.",
+        "translation": "这些药片每天服用三次。"
       },
       {
-        "word": "die Muttersprache",
-        "sentence": "Meine Muttersprache ist Chinesisch.",
-        "translation": "我的母语是中文。"
+        "word": "sich ausruhen",
+        "sentence": "Sie sollten sich ein paar Tage ausruhen.",
+        "translation": "您应该休息几天。"
       }
     ],
     "prompt": {
-      "german": "Stell dich vor! Sage deinen Namen, woher du kommst, wo du wohnst und was dein Hobby ist.",
-      "chinese": "介绍一下你自己！说说你的名字、来自哪里、住在哪里、爱好是什么。（目标：60秒口述）"
+      "german": "Du bist krank und gehst zum Arzt. Beschreib deine Symptome und was der Arzt dir gesagt hat.",
+      "chinese": "你生病了去看医生。描述你的症状和医生对你说的话。（目标：60秒口述）"
     },
     "shadow": {
-      "german": "Hallo! Ich heiße Li Wei. Ich komme aus China und wohne jetzt in Berlin. Ich bin 28 Jahre alt. Meine Muttersprache ist Chinesisch, aber ich lerne Deutsch seit einem Jahr. Mein Hobby ist Kochen und Wandern. Freut mich, dich kennenzulernen!",
-      "chinese": "你好！我叫李伟。我来自中国，现在住在柏林。我28岁。我的母语是中文，但我学德语已经一年了。我的爱好是烹饪和徒步。很高兴认识你！"
+      "german": "Guten Morgen, Frau Müller. Was kann ich für Sie tun? – Guten Morgen, Doktor. Ich fühle mich seit drei Tagen nicht gut. Ich habe Kopfschmerzen und Husten. – Haben Sie Fieber? – Ja, gestern hatte ich 38,5 Grad. – Ich höre mal kurz Ihre Lunge. Atmen Sie tief ein. – Ja, Doktor. – Das ist eine leichte Erkältung. Ich gebe Ihnen ein Rezept. Trinken Sie viel und ruhen Sie sich aus!",
+      "chinese": "早上好，Müller 女士。我能为您做什么？— 早上好，医生。我这三天感觉不舒服。我头痛还咳嗽。— 您发烧吗？— 是的，昨天我38.5度。— 让我听一下您的肺部。深呼吸。— 好的，医生。— 这是轻微感冒。我给您开个处方。多喝水，好好休息！"
     },
     "debate": {
-      "question": "Ist es wichtig, die Muttersprache zu behalten, wenn man im Ausland lebt?",
-      "translation": "在国外生活时，保留母语重要吗？",
+      "question": "Soll man bei einer Erkältung sofort zum Arzt gehen oder erst zu Hause bleiben?",
+      "translation": "感冒时应该立刻去看医生，还是先在家休息？",
       "points": [
         {
-          "side": "Pro",
-          "text": "Die Muttersprache ist Teil der eigenen Identität."
+          "side": "Pro (Arzt)",
+          "text": "Ein Arzt kann schnell die richtige Diagnose stellen."
         },
         {
-          "side": "Contra",
-          "text": "Man sollte sich voll auf die neue Sprache konzentrieren."
+          "side": "Contra (Arzt)",
+          "text": "Im Wartezimmer steckt man sich noch mehr an."
         },
         {
-          "side": "Pro",
-          "text": "Zweisprachigkeit ist gut für das Gehirn."
+          "side": "Pro (Zuhause)",
+          "text": "Ruhe und viel Trinken helfen oft am besten."
         },
         {
-          "side": "Contra",
-          "text": "Wenn man beide Sprachen mischt, lernt man keine richtig."
+          "side": "Contra (Zuhause)",
+          "text": "Ohne Arzt kann eine kleine Erkältung schlimmer werden."
         }
       ]
     }
